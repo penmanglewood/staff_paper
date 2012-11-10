@@ -1,0 +1,28 @@
+{
+  "name": "staff-paper",
+  "title": "Staff Paper",
+  "description": "Simple music notation rendering library",
+  "version": "0.1.0",
+  "homepage": "",
+  "author": {
+    "name": "Eric Rubio",
+    "email": "penmanglewood@fastmail.fm"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/penmanglewood/staff_paper"
+  },
+  "bugs": {
+    "url": ""
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "/blob/master/LICENSE"
+    }
+  ],
+  "dependencies": {
+    "raphael":"*"
+  },
+  "keywords": []
+}
