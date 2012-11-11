@@ -21,32 +21,14 @@ window.StaffPaper = StaffPaper;
     this.drawBG = true; //The flag that stores whether the background needs to be redrawn or not.
 
     this.paper = new Raphael(this.container_id, this.width, this.height);
-
-    this.noteYMap = {};
-    //TODO where does this map belong?
-    this.noteYMap[1] = { f: this.options.padding, 
-                        e: this.options.padding + (this.options.lineSpacing * 0.5), 
-                        d: this.options.padding + this.options.lineSpacing, 
-                        c: this.options.padding + (this.options.lineSpacing * 1.5)};
-    this.noteYMap[0] = { b: this.options.padding + (this.options.lineSpacing * 2), 
-                        a: this.options.padding + (this.options.lineSpacing * 2.5), 
-                        g: this.options.padding + (this.options.lineSpacing * 3), 
-                        f: this.options.padding + (this.options.lineSpacing * 3.5), 
-                        e: this.options.padding + (this.options.lineSpacing * 4), 
-                        d: this.options.padding + (this.options.lineSpacing * 4.5),
-                        c: this.options.padding + (this.options.lineSpacing * 5)};
   };
 
   StaffPaper.prototype.addStaff = function(clef, octave) {
     var staff = new StaffPaper.Staff(clef, octave);
+    staff.options = this.options;
     this.staves.push(staff);
 
     return staff;
-  };
-
-  //Gets the y position for the note name
-  StaffPaper.prototype.getYPosForNote = function(noteName, octave) {
-    return this.noteYMap[octave][noteName.toLowerCase()];
   };
 
   StaffPaper.prototype.staffPathWithYOffset = function(yOffset) {
@@ -58,6 +40,11 @@ window.StaffPaper = StaffPaper;
     return sp;
   };
 
+  StaffPaper.prototype.getYPosForNote = function(note) {
+    var staffSpace = Math.floor(this.options.lineSpacing * 0.5);
+    return this.options.padding + (staffSpace * note.positionIndex);
+  };
+
   /************************
   RENDERING
   *************************/
@@ -66,8 +53,6 @@ window.StaffPaper = StaffPaper;
   * Renders the staff according to the current data
   ***/
   StaffPaper.prototype.draw = function() {
-
-    //Draw BG
     if (this.drawBG) {
       this.drawBG = false;
 
@@ -85,17 +70,20 @@ window.StaffPaper = StaffPaper;
       }
     }
 
-    //Draw notes
-    //TODO move to rendering code
-    // var noteVRad = Math.floor(this.options.lineSpacing * 0.5 - 2),
-    //     noteHRad = Math.floor(noteVRad * 1.375),
-    //     noteStartX = 40;
+    var noteVRad = Math.floor(this.options.lineSpacing * 0.5 - 2),
+        noteHRad = Math.floor(noteVRad * 1.375),
+        noteStartX = 40;
 
-    //TODO move to rendering code
-    //var noteX = noteStartX + (this.notes.length * ((noteHRad + noteHRad) + this.options.noteSpacing));
-
-    //TODO move to rendering code
-    //this.paper.ellipse(noteX, this.getYPosForNote(noteName, octave), noteHRad, noteVRad).attr({fill: '#000'}).rotate(-25);
+    for (var j = 0; j < this.staves.length; j++) {
+      var staff = this.staves[j];
+      for (var k = 0; k < staff.notes.length; k++) {
+        var note = staff.notes[k],
+            noteX = noteStartX + (k * ((noteHRad + noteHRad) + this.options.noteSpacing)),
+            noteY = this.getYPosForNote(note);
+        
+        this.paper.ellipse(noteX, noteY, noteHRad, noteVRad).attr({fill: '#000'}).rotate(-25);
+      }
+    }
   };
 
   /**
@@ -114,11 +102,13 @@ window.StaffPaper = StaffPaper;
   /**
   * Note object
   *
+  * pos - the index of the note position on the staff
   * name - the note name. a-g. Use # for sharps and the lowercase letter b for flats
   * duration - the metrical value of the note: 1 - whole, 2 - half, 4 - quarter, 8 - eighth... Defaults to 4.
   * octave - the octave of the note
   **/
-  StaffPaper.Note = function(name, duration, octave) {
+  StaffPaper.Note = function(pos, name, duration, octave) {
+    this.positionIndex = pos;
     this.name = name || "";
     this.duration = parseInt(duration, 10) || 4;
     this.octave = octave;
@@ -133,6 +123,7 @@ window.StaffPaper = StaffPaper;
   StaffPaper.Staff = function(clef, octave) {
     this.clef = clef || "";
     this.notes = [];
+    this.options = {};
 
     var octDelta = parseInt(octave, 10) || 0;
     if (this.clef === "g") {
@@ -168,8 +159,8 @@ window.StaffPaper = StaffPaper;
   StaffPaper.Staff.prototype.addNote = function(noteIndex, duration) {
     var noteInfo = StaffPaper.getNoteInfo(this, noteIndex);
     var noteDuration = parseInt(duration, 10) || 4;
-
-    this.notes.push(new StaffPaper.Note(noteInfo.name, noteDuration, noteInfo.octave));
+    
+    this.notes.push(new StaffPaper.Note(noteIndex, noteInfo.name, noteDuration, noteInfo.octave));
   };
 
   StaffPaper.getNoteInfo = function(staff, noteIndex) {
