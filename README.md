@@ -66,6 +66,12 @@ gclef.addNote(8); //Add E
 gclef.addNote(6); //Add G
 ```
 
+###5. Draw to screen
+
+```
+paper.draw();
+```
+  
 #What's coming up?
 
 A lot. The concept of note duration, the ability for the music to render on multiple systems, clef, key signature and accidentals.
