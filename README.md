@@ -7,7 +7,8 @@ It is currently in pre-release, and the API will change often.
 
 #Usage
 
-Download the [production version][min] or the [development version][max].
+- Download [Raphaël](http://raphaeljs.com/)
+- Download the [production version][min] or the [development version][max].
 
 [min]: https://raw.github.com/penmanglewood/staff_paper/master/bin/staff-paper.min.js
 [max]: https://raw.github.com/penmanglewood/staff_paper/master/bin/staff-paper.js 
