@@ -1,9 +1,9 @@
-Staff Paper
+StaffPaper
 ===========
 
-staff_paper is a JavaScript library for rendering simple music notation in the browser. It uses the Raphaël vector graphics library for cross-browser compatible graphics.
+staff_paper is a JavaScript library for rendering simple music notation in the browser. It uses the [Raphaël vector graphics library](http://raphaeljs.com/) for cross-browser compatible graphics.
 
-It is currently in pre-release, and the API will likely change often.
+It is currently in pre-release, and the API will change often.
 
 #Usage
 
@@ -23,9 +23,14 @@ In your web page:
 
 ###2. Create your staff paper. Create an empty div for the paper, give it an id, and pass the id to the StaffPaper constructor.
 
+This library uses the DOM for drawing, so call the StaffPaper constructor only after the DOM has loaded. 
+Use ready() if using jQuery, or window.onload for plain JavaScript.
+
 ```html
 <script type="text/javascript">
-  var paper = new StaffPaper('canvas', 800);
+  window.onload = function() {
+    var paper = new StaffPaper('canvas', 800);
+  }
 </script>
 <body>
   <div id="canvas"></div>
@@ -59,6 +64,12 @@ gclef.addNote(10); //Add middle C
 gclef.addNote(8); //Add E
 gclef.addNote(6); //Add G
 ```
+
+#What's coming up?
+
+A lot. The concept of note duration, the ability for the music to render on multiple systems, clef, key signature and accidentals.
+Watch this project and stay tuned for updates.
+
   
 #Development
 
