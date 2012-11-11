@@ -8,15 +8,17 @@ window.StaffPaper = StaffPaper;
     }
     
     this.options = options;
-    this.options.lineSpacing = parseInt(options.lineSpacing, 10) || 20; //The amount of pixel space between each staff line
+    this.options.lineSpacing = parseInt(options.lineSpacing, 10) || 14; //The amount of pixel space between each staff line
     this.options.noteSpacing = parseInt(options.noteSpacing, 10) || 10; //The space between notes on the staff
-    this.options.padding = parseInt(options.padding, 10) || 40; //The amount of pixel space above and below the staff
+    this.options.padding = parseInt(options.padding, 10) || 34; //The amount of pixel space above and below the staff
+    this.options.interStaffPadding = parseInt(options.interStaffPadding, 10) || 28; //The amount of space in between each staff
 
     this.container_id = container_id;
     this.width = parseInt(width, 10);
     this.height = (this.options.lineSpacing * 4) + (this.options.padding * 2);
     this.staves = []; //The collection of Staff objects for this StaffPaper
-    this.ui = {}; //The object that will hold all the Raphael UI elements or sets
+    this.ui = {staves: []}; //The object that will hold all the Raphael UI elements or sets
+    this.drawBG = true; //The flag that stores whether the background needs to be redrawn or not.
 
     this.paper = new Raphael(this.container_id, this.width, this.height);
 
@@ -35,50 +37,6 @@ window.StaffPaper = StaffPaper;
                         c: this.options.padding + (this.options.lineSpacing * 5)};
   };
 
-  /**
-  * Adds a note to a staff
-  *
-  * staffIndex - The index of the staff to add the note to.
-  * noteIndex - The integer value of the line or space to add the note to.
-  *             Each staff supports two leger lines above and below the
-  *             staff, and their noteIndex values can be calculated by adding
-  *             or subtracting from the boundary values. The chart below
-  *             shows the values for the main staff. For example, if the staff
-  *             below had a treble clef, the noteIndex value for middle C
-  *             would be 11. If it were bass clef, middle C would be -2.
-  *
-  * Values    Staff
-  *
-  *    0      -------------
-  *    1
-  *    2      -------------
-  *    3
-  *    4      -------------
-  *    5
-  *    6      -------------
-  *    7
-  *    8      -------------
-  ***/
-  StaffPaper.prototype.addNote = function(staffIndex, noteIndex, duration) {
-    if (this.staves[staffIndex] === undefined) {
-      throw new Error("Staff [" + staffIndex + "] does not exist.");
-    }
-    //TODO move to rendering code
-    // var noteVRad = Math.floor(this.options.lineSpacing * 0.5 - 2),
-    //     noteHRad = Math.floor(noteVRad * 1.375),
-    //     noteStartX = 40;
-
-    //TODO move to rendering code
-    //var noteX = noteStartX + (this.notes.length * ((noteHRad + noteHRad) + this.options.noteSpacing));
-
-    //TODO move to rendering code
-    //this.paper.ellipse(noteX, this.getYPosForNote(noteName, octave), noteHRad, noteVRad).attr({fill: '#000'}).rotate(-25);
-    var noteInfo = StaffPaper.getNoteInfo(this.staves[staffIndex], noteIndex);
-    var noteDuration = parseInt(duration, 10) || 4;
-
-    this.staves[staffIndex].notes.push(new StaffPaper.Note(noteInfo.name, noteDuration, noteInfo.octave));
-  };
-
   StaffPaper.prototype.addStaff = function(clef, octave) {
     var staff = new StaffPaper.Staff(clef, octave);
     this.staves.push(staff);
@@ -91,6 +49,15 @@ window.StaffPaper = StaffPaper;
     return this.noteYMap[octave][noteName.toLowerCase()];
   };
 
+  StaffPaper.prototype.staffPathWithYOffset = function(yOffset) {
+    var sp = "";
+    for (var i = 0, newY = yOffset; i < 5; i++, newY += this.options.lineSpacing) {
+      sp += "M0 " + newY.toString() + "L" + this.width + " " + newY.toString();
+    }
+
+    return sp;
+  };
+
   /************************
   RENDERING
   *************************/
@@ -100,13 +67,35 @@ window.StaffPaper = StaffPaper;
   ***/
   StaffPaper.prototype.draw = function() {
 
-    var staffPath = "";
-    for (var i = 0, newY = this.options.padding; i < 5; i++, newY += this.options.lineSpacing) {
-      staffPath += "M0 " + newY.toString() + "L" + this.width + " " + newY.toString();
+    //Draw BG
+    if (this.drawBG) {
+      this.drawBG = false;
+
+      var staffHeight = this.options.lineSpacing * 4;
+      this.height = ((staffHeight * this.staves.length) + (this.options.interStaffPadding * (this.staves.length - 1))) + (this.options.padding * 2);
+
+      this.paper.setSize(this.width, this.height);
+
+      this.ui.bg = this.paper.rect(0, 0, this.width, this.height, 4).attr({fill: "#efefef", stroke: "none"});
+
+      var yOffset = this.options.padding;
+      for (var i = 0; i < this.staves.length; i++) {
+        this.ui.staves.push(this.paper.path(this.staffPathWithYOffset(yOffset)).attr({stroke: '#888', 'stroke-width': 2}));
+        yOffset += staffHeight + this.options.interStaffPadding;
+      }
     }
 
-    this.ui.bg = this.paper.rect(0, 0, this.width, this.height, 4).attr({fill: "#efefef", stroke: "none"});
-    //this.ui.staves = this.paper.path(staffPath).attr({stroke: '#888', 'stroke-width': 2});
+    //Draw notes
+    //TODO move to rendering code
+    // var noteVRad = Math.floor(this.options.lineSpacing * 0.5 - 2),
+    //     noteHRad = Math.floor(noteVRad * 1.375),
+    //     noteStartX = 40;
+
+    //TODO move to rendering code
+    //var noteX = noteStartX + (this.notes.length * ((noteHRad + noteHRad) + this.options.noteSpacing));
+
+    //TODO move to rendering code
+    //this.paper.ellipse(noteX, this.getYPosForNote(noteName, octave), noteHRad, noteVRad).attr({fill: '#000'}).rotate(-25);
   };
 
   /**
@@ -149,7 +138,7 @@ window.StaffPaper = StaffPaper;
     if (this.clef === "g") {
       this.octave = 4 + octDelta; //The common g-clef staff is known as octave 4. e.g. C4
     } else if (this.clef === "f") {
-      this.octave = 3 + octDelta; //The common f-clef staff is known as octave 3. e.g. B3
+      this.octave = 2 + octDelta; //The common f-clef staff is known as octave 3. e.g. G2
     }
   };
 
@@ -188,6 +177,7 @@ window.StaffPaper = StaffPaper;
     var octave = staff.octave;
 
     if (staff.clef === "g") {
+
       if (noteIndex <= -4) {
         octave = 6;
       } else if (noteIndex >= -3 && noteIndex <= 3) {
@@ -195,6 +185,7 @@ window.StaffPaper = StaffPaper;
       } else if (noteIndex >= 11) {
         octave = 3;
       }
+
       switch (noteIndex) {
         case -6: name = "E"; break;
         case -5: name = "D"; break;
@@ -217,7 +208,31 @@ window.StaffPaper = StaffPaper;
         case 12: name = "A"; break;
       }
     } else if (staff.clef === "f") {
+      if (noteIndex <= -2) {
+        octave = 4;
+      } else if (noteIndex <= 5) {
+        octave = 3;
+      }
 
+      switch (noteIndex) {
+        case -4: name = "E"; break;
+        case -3: name = "D"; break;
+        case -2: name = "C"; break;
+        case -1: name = "B"; break;
+        case 0: name = "A"; break;
+        case 1: name = "G"; break;
+        case 2: name = "F"; break;
+        case 3: name = "E"; break;
+        case 4: name = "D"; break;
+        case 5: name = "C"; break;
+        case 6: name = "B"; break;
+        case 7: name = "A"; break;
+        case 8: name = "G"; break;
+        case 9: name = "F"; break;
+        case 10: name = "E"; break;
+        case 11: name = "D"; break;
+        case 12: name = "C"; break;
+      }
     }
 
     return {name: name, octave: octave};

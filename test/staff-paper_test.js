@@ -81,7 +81,7 @@
     var staff = this.paper.addStaff("f");
     strictEqual(this.paper.staves.length, 1, "length should be 1");
     strictEqual(staff.clef, 'f', "clef should be f");
-    strictEqual(staff.octave, 3, "octave should be 3");
+    strictEqual(staff.octave, 2, "octave should be 2");
   });
 
   module('Notes on one staff', {
@@ -96,7 +96,7 @@
   });
 
   test('should be F5', 4, function() {
-    this.paper.addNote(0, 0);
+    this.staff.addNote(0);
     strictEqual(this.staff.notes.length, 1, "length should be 1");
     strictEqual(this.staff.notes[0].name, "F", "name should be F");
     strictEqual(this.staff.notes[0].octave, 5, "octave should be 5");
@@ -104,7 +104,7 @@
   });
 
   test('should be E5', 4, function() {
-    this.paper.addNote(0, 1);
+    this.staff.addNote(1);
     strictEqual(this.staff.notes.length, 1, "length should be 1");
     strictEqual(this.staff.notes[0].name, "E", "name should be E");
     strictEqual(this.staff.notes[0].octave, 5, "octave should be 5");
@@ -112,7 +112,7 @@
   });
 
   test('should be D5', 4, function() {
-    this.paper.addNote(0, 2);
+    this.staff.addNote(2);
     strictEqual(this.staff.notes.length, 1, "length should be 1");
     strictEqual(this.staff.notes[0].name, "D", "name should be D");
     strictEqual(this.staff.notes[0].octave, 5, "octave should be 5");
@@ -120,7 +120,7 @@
   });
 
   test('should be C5', 4, function() {
-    this.paper.addNote(0, 3);
+    this.staff.addNote(3);
     strictEqual(this.staff.notes.length, 1, "length should be 1");
     strictEqual(this.staff.notes[0].name, "C", "name should be C");
     strictEqual(this.staff.notes[0].octave, 5, "octave should be 5");
@@ -128,7 +128,7 @@
   });
 
   test('should be B4', function() {
-    this.paper.addNote(0, 4);
+    this.staff.addNote(4);
     strictEqual(this.staff.notes.length, 1, "length should be 1");
     strictEqual(this.staff.notes[0].name, "B", "name should be B");
     strictEqual(this.staff.notes[0].octave, 4, "octave should be 4");
@@ -136,7 +136,7 @@
   });
 
   test('should be A4', function() {
-    this.paper.addNote(0, 5);
+    this.staff.addNote(5);
     strictEqual(this.staff.notes.length, 1, "length should be 1");
     strictEqual(this.staff.notes[0].name, "A", "name should be A");
     strictEqual(this.staff.notes[0].octave, 4, "octave should be 4");
@@ -144,7 +144,7 @@
   });
 
   test('should be G4', function() {
-    this.paper.addNote(0, 6);
+    this.staff.addNote(6);
     strictEqual(this.staff.notes.length, 1, "length should be 1");
     strictEqual(this.staff.notes[0].name, "G", "name should be G");
     strictEqual(this.staff.notes[0].octave, 4, "octave should be 4");
@@ -152,7 +152,7 @@
   });
 
   test('should be F4', function() {
-    this.paper.addNote(0, 7);
+    this.staff.addNote(7);
     strictEqual(this.staff.notes.length, 1, "length should be 1");
     strictEqual(this.staff.notes[0].name, "F", "name should be F");
     strictEqual(this.staff.notes[0].octave, 4, "octave should be 4");
@@ -160,7 +160,7 @@
   });
 
   test('should be E4', function() {
-    this.paper.addNote(0, 8);
+    this.staff.addNote(8);
     strictEqual(this.staff.notes.length, 1, "length should be 1");
     strictEqual(this.staff.notes[0].name, "E", "name should be E");
     strictEqual(this.staff.notes[0].octave, 4, "octave should be 4");
@@ -168,7 +168,7 @@
   });
 
   test('should be D4', function() {
-    this.paper.addNote(0, 9);
+    this.staff.addNote(9);
     strictEqual(this.staff.notes.length, 1, "length should be 1");
     strictEqual(this.staff.notes[0].name, "D", "name should be D");
     strictEqual(this.staff.notes[0].octave, 4, "octave should be 4");
@@ -176,7 +176,7 @@
   });
 
   test('should be C4', function() {
-    this.paper.addNote(0, 10);
+    this.staff.addNote(10);
     strictEqual(this.staff.notes.length, 1, "length should be 1");
     strictEqual(this.staff.notes[0].name, "C", "name should be C");
     strictEqual(this.staff.notes[0].octave, 4, "octave should be 4");
@@ -184,7 +184,7 @@
   });
 
   test('should be B3', function() {
-    this.paper.addNote(0, 11);
+    this.staff.addNote(11);
     strictEqual(this.staff.notes.length, 1, "length should be 1");
     strictEqual(this.staff.notes[0].name, "B", "name should be B");
     strictEqual(this.staff.notes[0].octave, 3, "octave should be 3");
@@ -192,7 +192,7 @@
   });
 
   test('should be A3', function() {
-    this.paper.addNote(0, 12);
+    this.staff.addNote(12);
     strictEqual(this.staff.notes.length, 1, "length should be 1");
     strictEqual(this.staff.notes[0].name, "A", "name should be A");
     strictEqual(this.staff.notes[0].octave, 3, "octave should be 3");
