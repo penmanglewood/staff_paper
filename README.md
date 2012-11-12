@@ -18,8 +18,8 @@ In your web page:
 ###1. Import Raphael and StaffPaper.
 
 ```html
-<script src="path/to/raphael-min.js"></script>
-<script src="path/to/staff-paper.min.js"></script>
+<script type="text/javascript" src="path/to/raphael-min.js"></script>
+<script type="text/javascript" src="path/to/staff-paper.min.js"></script>
 ```
 
 ###2. Create your staff paper. Create an empty div for the paper, give it an id, and pass the id to the StaffPaper constructor.
@@ -74,8 +74,8 @@ paper.draw();
   
 #What's coming up?
 
-A lot. The concept of note duration, the ability for the music to render on multiple systems, clef, key signature and accidentals.
-Watch this project and stay tuned for updates.
+A lot. Accidentals, note duration, clef, key signature, rendering on multiple systems, and more.
+Stay tuned!
 
   
 #Development
