@@ -23,6 +23,10 @@ window.StaffPaper = StaffPaper;
     this.paper = new Raphael(this.container_id, this.width, this.height);
   };
 
+  /**
+  * Add a staff to the paper.
+  * Returns a StaffPaper.Staff object
+  **/
   StaffPaper.prototype.addStaff = function(clef, octave) {
     var staff = new StaffPaper.Staff(clef, octave);
     staff.options = this.options;
@@ -31,6 +35,7 @@ window.StaffPaper = StaffPaper;
     return staff;
   };
 
+  //Retrieve the path for a staff given a y offset
   StaffPaper.prototype.staffPathWithYOffset = function(yOffset) {
     var sp = "";
     for (var i = 0, newY = yOffset; i < 5; i++, newY += this.options.lineSpacing) {
@@ -40,17 +45,14 @@ window.StaffPaper = StaffPaper;
     return sp;
   };
 
+  //Retrieve the y position of a note given its StaffPaper.Note object
   StaffPaper.prototype.getYPosForNote = function(note) {
     var staffSpace = Math.floor(this.options.lineSpacing * 0.5);
     return this.options.padding + (staffSpace * note.positionIndex);
   };
 
-  /************************
-  RENDERING
-  *************************/
-
   /**
-  * Renders the staff according to the current data
+  * Renders the staff according to the current state
   ***/
   StaffPaper.prototype.draw = function() {
     if (this.drawBG) {
@@ -163,6 +165,13 @@ window.StaffPaper = StaffPaper;
     this.notes.push(new StaffPaper.Note(noteIndex, noteInfo.name, noteDuration, noteInfo.octave));
   };
 
+  /**
+  * Retrieves the name and octave of a note given its staff and position index.
+  * Mainly used internally.
+  *
+  * staff - The staff object that contains the note in question
+  * noteIndex - The index of the note in question
+  ***/
   StaffPaper.getNoteInfo = function(staff, noteIndex) {
     var name = "";
     var octave = staff.octave;
